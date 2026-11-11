@@ -38,7 +38,7 @@ def center_print(text, style: str = None, wrap: bool = False) -> None:
 
 
 def write_config(data: dict) -> None:
-    with open(os.path.join(config_path, "config.json"), "w") as of:
+    with open(os.path.join(config_path, "config.json"), "w", encoding="utf-8") as of:
         of.write(json.dumps(data, indent=2))
 
 
@@ -257,7 +257,7 @@ def changetimeformat() -> None:
 def changequotes(quotes_file: str) -> None:
     #Check if file exists and it is a valid JSON
     try:
-        with open(quotes_file, "r") as qf:
+        with open(quotes_file, "r", encoding="utf-8") as qf:
             quotes = json.load(qf)
 
         #Check if the file has at least one quote
@@ -344,7 +344,7 @@ def getquotes() -> dict:
         dict: quote with its metadata
     """
 
-    with open(config["quotes_file"], "r") as qf:
+    with open(config["quotes_file"], "r", encoding="utf-8") as qf:
         quotes_file = json.load(qf)
     return quotes_file[random.randrange(0, len(quotes_file))]
 
@@ -436,11 +436,12 @@ def main() -> None:
         os.makedirs(config_path)
 
     try:
-        with open(os.path.join(config_path, "config.json")) as config_file:
+        with open(os.path.join(config_path, "config.json"), encoding="utf-8") as config_file:
             global config
             config = json.load(config_file)
     except FileNotFoundError:
-        open(os.path.join(config_path, "config.json"), "w")
+        with open(os.path.join(config_path, "config.json"), "w", encoding="utf-8"):
+            pass
         typer.run(setup)
     except json.JSONDecodeError:
         center_print(
@@ -453,4 +454,5 @@ def main() -> None:
             typer.run(setup)
 
 
-main()
+if __name__ == "__main__":
+    main()
